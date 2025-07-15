@@ -4,14 +4,38 @@ const { reportSchema, filterSchema } = require('../utils/validation');
 class ReportController {
   static async uploadReport(req, res) {
     try {
+      console.log('Upload request received');
+      console.log('Files:', req.file ? 'File present' : 'No file');
+      console.log('File details:', req.file ? {
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      } : 'N/A');
+
       if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
       }
 
-      const reportData = JSON.parse(req.file.buffer.toString());
+      if (!req.file.buffer || req.file.buffer.length === 0) {
+        return res.status(400).json({ error: 'File is empty' });
+      }
+
+      const fileContent = req.file.buffer.toString();
+      console.log('File content preview:', fileContent.substring(0, 100));
+
+      let reportData;
+      try {
+        reportData = JSON.parse(fileContent);
+      } catch (parseError) {
+        console.log('JSON parse error:', parseError.message);
+        return res.status(400).json({ error: 'Invalid JSON format in uploaded file' });
+      }
+
       const { error, value } = reportSchema.validate(reportData);
       
       if (error) {
+        console.log('Validation error:', error.details[0].message);
         return res.status(400).json({ error: error.details[0].message });
       }
 
@@ -29,7 +53,7 @@ class ReportController {
       console.error('Upload error:', error);
       
       if (error instanceof SyntaxError) {
-        return res.status(400).json({ error: 'Invalid JSON format' });
+        return res.status(400).json({ error: 'Invalid JSON payload' });
       }
       
       res.status(500).json({ error: 'Failed to process upload' });

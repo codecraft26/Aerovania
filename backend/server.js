@@ -8,7 +8,7 @@ const { apiLimiter } = require('./src/middleware/rateLimiter');
 // Import routes
 const authRoutes = require('./src/routes/auth');
 const reportRoutes = require('./src/routes/reports');
-const adminRoutes = require('./src/routes/admin');
+
 
 const app = express();
 const PORT = 8000;
@@ -21,11 +21,22 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(express.json({ limit: '10mb' }));
+// Apply JSON parsing to most routes, but exclude upload endpoints
+app.use((req, res, next) => {
+  // Skip JSON parsing for upload endpoints
+  if (req.path.includes('/upload')) {
+    console.log('Skipping JSON parsing for upload endpoint:', req.path);
+    next();
+  } else {
+    console.log('Applying JSON parsing for:', req.path);
+    express.json({ limit: '10mb' })(req, res, next);
+  }
+});
+
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Apply rate limiting to all requests
-app.use(apiLimiter);
+// // Apply rate limiting to all requests
+// app.use(apiLimiter);
 
 // Health check routes
 app.get('/', async (req, res) => {
@@ -77,7 +88,7 @@ app.get('/api/health', async (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/reports', reportRoutes);
-app.use('/api/admin', adminRoutes);
+
 
 // Backward compatibility routes (keeping same endpoints)
 app.use('/api', reportRoutes); // This maintains the existing endpoints
