@@ -137,6 +137,14 @@ The application is deployed and accessible at:
 Aerovania/
 ├── docker-compose.yml          # Docker orchestration
 ├── sample_report.json          # Sample data for testing
+├── sample_20_records.json      # Sample with 20 violation records
+├── sample_report_zone_a_day2.json  # Zone A day 2 sample data
+├── sample_report_zone_b.json   # Zone B sample data
+├── sample_report_zone_c.json   # Zone C sample data
+├── sample_report_zone_d.json   # Zone D sample data
+├── sample_report_zone_e.json   # Zone E sample data
+├── sample_test_report.json     # Test report sample
+├── upload_sample_reports.sh    # Script to upload all samples
 ├── README.md                   # Project documentation
 ├── backend/
 │   ├── Dockerfile             # Backend container config
@@ -195,8 +203,15 @@ aeroniva-frontend/
 # Upload a report (Local development)
 curl -X POST -F "report=@sample_report.json" http://localhost:8000/api/upload
 
+# Upload different zone samples (Local)
+curl -X POST -F "report=@sample_report_zone_a_day2.json" http://localhost:8000/api/upload
+curl -X POST -F "report=@sample_report_zone_b.json" http://localhost:8000/api/upload
+
 # Upload a report (Production)
 curl -X POST -F "report=@sample_report.json" https://backend.otito.in/api/upload
+
+# Upload multiple zone samples (Production)
+curl -X POST -F "report=@sample_report_zone_c.json" https://backend.otito.in/api/upload
 
 # Get violations for a specific drone (Local)
 curl "http://localhost:8000/api/violations?drone_id=DRONE_ZONE_1"
@@ -210,6 +225,19 @@ curl "https://backend.otito.in/api/kpis?date=2025-07-10"
 
 ## 📊 Sample Data Format
 
+The repository includes multiple sample JSON files for testing different scenarios:
+
+### Available Sample Files
+- **`sample_report.json`** - Basic sample with standard violation data
+- **`sample_20_records.json`** - Sample containing 20 violation records for testing pagination
+- **`sample_report_zone_a_day2.json`** - Zone A data for day 2 testing
+- **`sample_report_zone_b.json`** - Zone B specific violation data
+- **`sample_report_zone_c.json`** - Zone C specific violation data
+- **`sample_report_zone_d.json`** - Zone D specific violation data
+- **`sample_report_zone_e.json`** - Zone E specific violation data
+- **`sample_test_report.json`** - Test report for validation scenarios
+
+### Sample Data Structure
 ```json
 {
   "drone_id": "DRONE_ZONE_1",
@@ -226,6 +254,19 @@ curl "https://backend.otito.in/api/kpis?date=2025-07-10"
     }
   ]
 }
+```
+
+### Bulk Upload Script
+Use the provided script to upload all sample files at once:
+```bash
+# Make the script executable
+chmod +x upload_sample_reports.sh
+
+# Upload all sample files to local development
+./upload_sample_reports.sh
+
+# Or upload to production
+BACKEND_URL=https://backend.otito.in ./upload_sample_reports.sh
 ```
 
 ## 🗺️ Map Features
@@ -289,14 +330,22 @@ NEXT_PUBLIC_API_BASE=https://backend.otito.in/api
 ### Local Testing
 1. **Start the application** using `docker-compose up --build`
 2. **Navigate to** http://localhost:3000
-3. **Upload the sample file** using the provided `sample_report.json`
-4. **Explore the dashboard** to see KPIs and charts
-5. **View the map** to see violation locations
-6. **Use the table view** to search and filter data
+3. **Upload sample files** using any of the provided sample JSON files:
+   - `sample_report.json` - Basic testing
+   - `sample_20_records.json` - Large dataset testing
+   - `sample_report_zone_*.json` - Multi-zone testing
+   - `sample_test_report.json` - Validation testing
+4. **Use the bulk upload script** to test with all samples: `./upload_sample_reports.sh`
+5. **Explore the dashboard** to see KPIs and charts
+6. **View the map** to see violation locations across different zones
+7. **Use the table view** to search and filter data
 
 ### Production Testing
 1. **Visit the live application** at https://aeroniva-frontend.vercel.app/
-2. **Upload sample data** using any of the provided sample JSON files
+2. **Upload sample data** using any of the provided sample JSON files:
+   - Test different zones with zone-specific samples
+   - Test pagination with `sample_20_records.json`
+   - Test edge cases with `sample_test_report.json`
 3. **Test all features** including dashboard, map view, and table view
 4. **Verify API endpoints** using https://backend.otito.in/api/health
 
