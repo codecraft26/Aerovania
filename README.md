@@ -86,7 +86,14 @@ A full-stack web application that simulates an AI-powered drone analytics dashbo
 
 ## 🚀 Quick Start
 
-### Using Docker (Recommended)
+### Using Docker Compose (Recommended)
+
+#### Prerequisites
+- Docker Engine 20.10+ installed
+- Docker Compose 2.0+ installed
+- Git for cloning the repository
+
+#### Step-by-step Setup
 
 1. **Clone the unified repository:**
    ```bash
@@ -94,15 +101,228 @@ A full-stack web application that simulates an AI-powered drone analytics dashbo
    cd Aerovania
    ```
 
-2. **Start the application:**
+2. **Set up environment variables:**
    ```bash
-   docker-compose up --build
+   # Copy the example environment file for backend
+   cp backend/.env.example backend/.env
+   
+   # Edit the environment file with your settings
+   nano backend/.env  # or use your preferred editor
    ```
 
-3. **Access the application:**
+3. **Start all services with Docker Compose:**
+   ```bash
+   # Build and start all services (database, backend, frontend)
+   docker-compose up --build
+   
+   # Or run in detached mode (background)
+   docker-compose up --build -d
+   ```
+
+4. **Wait for services to initialize:**
+   - Database initialization may take 1-2 minutes
+   - Backend will start after database is ready
+   - Frontend will be available once built
+
+5. **Access the application:**
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - Database: PostgreSQL on port 5432
+
+#### Docker Compose Commands
+
+```bash
+# Start services
+docker-compose up
+
+# Start services in background
+docker-compose up -d
+
+# Rebuild and start services
+docker-compose up --build
+
+# Stop all services
+docker-compose down
+
+# Stop services and remove volumes (clears database)
+docker-compose down -v
+
+# View logs
+docker-compose logs
+
+# View logs for specific service
+docker-compose logs backend
+docker-compose logs frontend
+docker-compose logs db
+
+# Execute commands in running containers
+docker-compose exec backend npm run migrate
+docker-compose exec db psql -U postgres -d drone_analytics
+```
+
+#### Troubleshooting Docker Compose
+
+1. **Port conflicts:**
+   ```bash
+   # Check if ports are in use
+   lsof -i :3000  # Frontend
+   lsof -i :8000  # Backend
+   lsof -i :5432  # Database
+   
+   # Stop conflicting services or change ports in docker-compose.yml
+   ```
+
+2. **Database connection issues:**
+   ```bash
+   # Reset database and restart
+   docker-compose down -v
+   docker-compose up --build
+   ```
+
+3. **Build issues:**
+   ```bash
+   # Clean build (removes cached layers)
+   docker-compose build --no-cache
+   docker-compose up
+   ```
+
+4. **Permission issues (Linux/macOS):**
+   ```bash
+   # Fix file permissions
+   sudo chown -R $USER:$USER .
+   ```
+
+## 🐳 Docker Compose Configuration
+
+The project includes a complete Docker Compose setup that orchestrates all services:
+
+### Services Overview
+- **Database (db)**: PostgreSQL 15 with persistent data
+- **Backend (backend)**: Node.js/Express API server
+- **Frontend (frontend)**: Next.js application
+
+### Docker Compose Structure
+```yaml
+# docker-compose.yml overview
+services:
+  db:
+    image: postgres:15
+    ports: ["5432:5432"]
+    environment:
+      - POSTGRES_DB=drone_analytics
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    ports: ["8000:8000"]
+    depends_on: [db]
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/drone_analytics
+      - JWT_SECRET=your_jwt_secret
+    volumes:
+      - ./backend:/app (for development)
+
+  frontend:
+    build: ./frontend
+    ports: ["3000:3000"]
+    depends_on: [backend]
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://localhost:8000/api
+```
+
+### Environment Configuration
+
+#### Required Environment Variables
+Create `backend/.env` with:
+```env
+# Database
+DATABASE_URL=postgresql://postgres:password@db:5432/drone_analytics
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=drone_analytics
+DB_USER=postgres
+DB_PASSWORD=password
+
+# Authentication
+JWT_SECRET=your_super_secure_jwt_secret_key_here
+JWT_REFRESH_SECRET=your_super_secure_refresh_secret_key_here
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Server
+PORT=8000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+```
+
+#### Optional Frontend Environment Variables
+Create `frontend/.env.local` (optional):
+```env
+NEXT_PUBLIC_API_BASE=http://localhost:8000/api
+```
+
+### Development with Docker Compose
+
+#### Hot Reloading
+Both frontend and backend support hot reloading in development:
+- Frontend: Next.js dev server with automatic reload
+- Backend: Nodemon watches for file changes
+- Database: Persistent data across restarts
+
+#### Volume Mounts
+- `./backend:/app` - Backend source code
+- `./frontend:/app` - Frontend source code  
+- `postgres_data` - Database persistence
+- `./backend/init.sql` - Database initialization
+
+#### Network Configuration
+All services communicate through a Docker network:
+- Frontend connects to backend via service name `backend:8000`
+- Backend connects to database via service name `db:5432`
+- External access through exposed ports
+
+### Production Deployment with Docker
+
+#### Build for Production
+```bash
+# Build production images
+docker-compose -f docker-compose.prod.yml build
+
+# Deploy to production
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+#### Production Environment Variables
+```env
+# Production backend .env
+NODE_ENV=production
+DATABASE_URL=postgresql://user:pass@prod-db:5432/drone_analytics
+JWT_SECRET=production_jwt_secret
+FRONTEND_URL=https://your-domain.com
+
+# Production frontend .env
+NEXT_PUBLIC_API_BASE=https://api.your-domain.com/api
+```
+
+The application is deployed and accessible at:
+- **Frontend:** https://aeroniva-frontend.vercel.app/
+- **Backend API:** https://backend.otito.in
+- **Database:** PostgreSQL hosted on Digital Ocean
+
+### Repository Structure
+- **Unified Repository:** [Aerovania](https://github.com/codecraft26/Aerovania) - Contains both frontend and backend
+- **Legacy Frontend Repository:** [aeroniva-frontend](https://github.com/codecraft26/aeroniva-frontend) - Separate frontend repo (deprecated)
+
+### Deployment Infrastructure
+- **Platform:** Frontend on Vercel, Backend on Digital Ocean Droplets
+- **Frontend:** Next.js application deployed on Vercel from unified repository
+- **Backend:** Node.js/Express API server with HTTPS configuration on Digital Ocean
+- **Database:** PostgreSQL database hosted on Digital Ocean with user authentication tables
+- **SSL:** HTTPS enabled for secure connections on both platforms
 
 ## 🌐 Live Deployment
 
