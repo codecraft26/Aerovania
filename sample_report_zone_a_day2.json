@@ -1,0 +1,23 @@
+{
+  "drone_id": "DRONE_ZONE_1",
+  "date": "2025-07-14",
+  "location": "Zone A - North Sector",
+  "violations": [
+    {
+      "id": "v13",
+      "type": "Fire Detected",
+      "timestamp": "06:45:30",
+      "latitude": 23.74123,
+      "longitude": 85.98789,
+      "image_url": "https://via.placeholder.com/150/FF0000/FFFFFF?text=Fire+Emergency"
+    },
+    {
+      "id": "v14",
+      "type": "Equipment Malfunction",
+      "timestamp": "11:20:18",
+      "latitude": 23.74234,
+      "longitude": 85.98890,
+      "image_url": "https://via.placeholder.com/150/8B0000/FFFFFF?text=Malfunction"
+    }
+  ]
+}

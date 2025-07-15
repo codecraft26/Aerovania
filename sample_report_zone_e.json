@@ -1,0 +1,47 @@
+{
+  "drone_id": "DRONE_ZONE_5",
+  "date": "2025-07-12",
+  "location": "Zone E - Construction Area",
+  "violations": [
+    {
+      "id": "v21",
+      "type": "No PPE Kit",
+      "timestamp": "07:00:00",
+      "latitude": 23.77123,
+      "longitude": 85.98123,
+      "image_url": "https://via.placeholder.com/150/FFFF00/000000?text=Hard+Hat"
+    },
+    {
+      "id": "v22",
+      "type": "No PPE Kit",
+      "timestamp": "08:15:30",
+      "latitude": 23.77234,
+      "longitude": 85.98234,
+      "image_url": "https://via.placeholder.com/150/FFFF00/000000?text=Safety+Vest"
+    },
+    {
+      "id": "v23",
+      "type": "Structural Damage",
+      "timestamp": "12:30:45",
+      "latitude": 23.77345,
+      "longitude": 85.98345,
+      "image_url": "https://via.placeholder.com/150/800080/FFFFFF?text=Crack"
+    },
+    {
+      "id": "v24",
+      "type": "Hazardous Material",
+      "timestamp": "15:45:20",
+      "latitude": 23.77456,
+      "longitude": 85.98456,
+      "image_url": "https://via.placeholder.com/150/FF69B4/FFFFFF?text=Chemical"
+    },
+    {
+      "id": "v25",
+      "type": "Equipment Malfunction",
+      "timestamp": "17:20:10",
+      "latitude": 23.77567,
+      "longitude": 85.98567,
+      "image_url": "https://via.placeholder.com/150/8B0000/FFFFFF?text=Crane+Issue"
+    }
+  ]
+}

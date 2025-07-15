@@ -1,0 +1,47 @@
+{
+  "drone_id": "DRONE_ZONE_3",
+  "date": "2025-07-14",
+  "location": "Zone C - Warehouse District",
+  "violations": [
+    {
+      "id": "v8",
+      "type": "Unauthorized Vehicle",
+      "timestamp": "07:22:15",
+      "latitude": 23.75234,
+      "longitude": 85.99123,
+      "image_url": "https://via.placeholder.com/150/4169E1/FFFFFF?text=Vehicle"
+    },
+    {
+      "id": "v9",
+      "type": "Structural Damage",
+      "timestamp": "10:55:40",
+      "latitude": 23.75345,
+      "longitude": 85.99234,
+      "image_url": "https://via.placeholder.com/150/800080/FFFFFF?text=Damage"
+    },
+    {
+      "id": "v10",
+      "type": "No PPE Kit",
+      "timestamp": "13:18:25",
+      "latitude": 23.75456,
+      "longitude": 85.99345,
+      "image_url": "https://via.placeholder.com/150/FFFF00/000000?text=Safety+Gear"
+    },
+    {
+      "id": "v11",
+      "type": "Hazardous Material",
+      "timestamp": "16:42:50",
+      "latitude": 23.75567,
+      "longitude": 85.99456,
+      "image_url": "https://via.placeholder.com/150/FF69B4/FFFFFF?text=Hazmat"
+    },
+    {
+      "id": "v12",
+      "type": "Unauthorized Person",
+      "timestamp": "18:35:12",
+      "latitude": 23.75678,
+      "longitude": 85.99567,
+      "image_url": "https://via.placeholder.com/150/FF8C00/FFFFFF?text=Person"
+    }
+  ]
+}

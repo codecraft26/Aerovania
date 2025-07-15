@@ -1,0 +1,31 @@
+{
+  "drone_id": "DRONE_ZONE_1", 
+  "date": "2025-07-15",
+  "location": "Zone A - North Sector",
+  "violations": [
+    {
+      "id": "v1",
+      "type": "Fire Detected",
+      "timestamp": "10:32:14",
+      "latitude": 23.74891,
+      "longitude": 85.98523,
+      "image_url": "https://via.placeholder.com/150/FF0000/FFFFFF?text=Fire"
+    },
+    {
+      "id": "v2", 
+      "type": "Unauthorized Vehicle",
+      "timestamp": "11:45:30",
+      "latitude": 23.75123,
+      "longitude": 85.98789,
+      "image_url": "https://via.placeholder.com/150/FFA500/FFFFFF?text=Vehicle"
+    },
+    {
+      "id": "v3",
+      "type": "Structural Damage",
+      "timestamp": "14:22:05", 
+      "latitude": 23.74567,
+      "longitude": 85.99012,
+      "image_url": "https://via.placeholder.com/150/800080/FFFFFF?text=Damage"
+    }
+  ]
+}
