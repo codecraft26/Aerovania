@@ -112,14 +112,34 @@ A full-stack web application that simulates an AI-powered drone analytics dashbo
 
 3. **Start all services with Docker Compose:**
    ```bash
-   # Build and start all services (database, backend, frontend)
+   # Basic startup (builds and starts all services)
    docker-compose up --build
    
-   # Or run in detached mode (background)
+   # Run in detached mode (background) - recommended for development
    docker-compose up --build -d
+   
+   # Start without rebuilding (if images already exist)
+   docker-compose up
+   
+   # Start only specific services
+   docker-compose up db backend  # Only database and backend
    ```
 
-4. **Wait for services to initialize:**
+4. **Monitor the startup process:**
+   ```bash
+   # If running in detached mode, check logs
+   docker-compose logs -f
+   
+   # Check specific service logs
+   docker-compose logs -f backend
+   docker-compose logs -f frontend
+   docker-compose logs -f db
+   
+   # Check service status
+   docker-compose ps
+   ```
+
+5. **Wait for services to initialize:**
    - Database initialization may take 1-2 minutes
    - Backend will start after database is ready
    - Frontend will be available once built
@@ -809,8 +829,8 @@ This project is created for the Aerovania technical assessment.
 
 **API Health Check:** https://backend.otito.in/api/health
 
+**Demo Video:** https://drive.google.com/file/d/1gD3jTNol7Tna6Upjlg2y_OYyzRd0X5H3/view?usp=drive_link
+
 ---
 
-**Demo Video:** [Link to be added]
-
-For any questions or support, please contact the development team.
+**For any questions or support, please contact the development team.**
