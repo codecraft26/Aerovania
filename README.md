@@ -56,6 +56,8 @@ A full-stack web application that simulates an AI-powered drone analytics dashbo
 | **Database** | PostgreSQL |
 | **Container** | Docker + docker-compose |
 | **Icons** | Lucide React |
+| **Deployment** | Frontend: Vercel, Backend: Digital Ocean |
+| **SSL/Domain** | HTTPS on Vercel and custom domain |
 
 ## 📋 Prerequisites
 
@@ -69,8 +71,12 @@ A full-stack web application that simulates an AI-powered drone analytics dashbo
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   # Backend repository
+   git clone https://github.com/codecraft26/Aerovania.git
    cd Aerovania
+   
+   # Frontend repository (separate)
+   git clone https://github.com/codecraft26/aeroniva-frontend.git
    ```
 
 2. **Start the application:**
@@ -82,6 +88,24 @@ A full-stack web application that simulates an AI-powered drone analytics dashbo
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - Database: PostgreSQL on port 5432
+
+## 🌐 Live Deployment
+
+The application is deployed and accessible at:
+- **Frontend:** https://aeroniva-frontend.vercel.app/
+- **Backend API:** https://backend.otito.in
+- **Database:** PostgreSQL hosted on Digital Ocean
+
+### Repository Structure
+- **Backend Repository:** [Aerovania](https://github.com/codecraft26/Aerovania) (Current repository)
+- **Frontend Repository:** [aeroniva-frontend](https://github.com/codecraft26/aeroniva-frontend)
+
+### Deployment Infrastructure
+- **Platform:** Frontend on Vercel, Backend on Digital Ocean Droplets
+- **Frontend:** Next.js application deployed on Vercel
+- **Backend:** Node.js/Express API server with HTTPS configuration on Digital Ocean
+- **Database:** PostgreSQL database hosted on Digital Ocean
+- **SSL:** HTTPS enabled for secure connections on both platforms
 
 ### Manual Setup (Development)
 
@@ -100,13 +124,15 @@ A full-stack web application that simulates an AI-powered drone analytics dashbo
 
 3. **Frontend Setup:**
    ```bash
-   cd frontend
+   # Navigate to frontend repository
+   cd aeroniva-frontend
    npm install
    npm run dev
    ```
 
 ## 📁 Project Structure
 
+### Backend Repository (Current)
 ```
 Aerovania/
 ├── docker-compose.yml          # Docker orchestration
@@ -117,24 +143,33 @@ Aerovania/
 │   ├── package.json           # Backend dependencies
 │   ├── server.js              # Express server
 │   └── init.sql               # Database initialization
-└── frontend/
+└── frontend/                  # Local frontend (for docker-compose)
     ├── dockerfile             # Frontend container config
-    ├── package.json           # Frontend dependencies
-    ├── src/
-    │   ├── app/
-    │   │   ├── layout.tsx     # App layout
-    │   │   └── page.tsx       # Main dashboard page
-    │   ├── components/
-    │   │   ├── Dashboard.tsx  # Dashboard with KPIs and charts
-    │   │   ├── FilterPanel.tsx # Filtering component
-    │   │   ├── Map.tsx        # Leaflet map component
-    │   │   ├── MapView.tsx    # Map view wrapper
-    │   │   ├── TableView.tsx  # Data table component
-    │   │   └── UploadForm.tsx # File upload component
-    │   └── utils/
-    │       ├── api.ts         # API utility functions
-    │       └── types.ts       # TypeScript type definitions
-    └── public/                # Static assets
+    └── package.json           # Frontend dependencies
+```
+
+### Frontend Repository (Separate)
+```
+aeroniva-frontend/
+├── package.json               # Frontend dependencies
+├── next.config.ts             # Next.js configuration
+├── tailwind.config.js         # Tailwind CSS config
+├── tsconfig.json              # TypeScript config
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx         # App layout
+│   │   └── page.tsx           # Main dashboard page
+│   ├── components/
+│   │   ├── Dashboard.tsx      # Dashboard with KPIs and charts
+│   │   ├── FilterPanel.tsx    # Filtering component
+│   │   ├── Map.tsx            # Leaflet map component
+│   │   ├── MapView.tsx        # Map view wrapper
+│   │   ├── TableView.tsx      # Data table component
+│   │   └── UploadForm.tsx     # File upload component
+│   └── utils/
+│       ├── api.ts             # API utility functions
+│       └── types.ts           # TypeScript type definitions
+└── public/                    # Static assets
 ```
 
 ## 🔧 API Endpoints
@@ -157,14 +192,20 @@ Aerovania/
 ### Example API Usage
 
 ```bash
-# Upload a report
+# Upload a report (Local development)
 curl -X POST -F "report=@sample_report.json" http://localhost:8000/api/upload
 
-# Get violations for a specific drone
+# Upload a report (Production)
+curl -X POST -F "report=@sample_report.json" https://backend.otito.in/api/upload
+
+# Get violations for a specific drone (Local)
 curl "http://localhost:8000/api/violations?drone_id=DRONE_ZONE_1"
 
-# Get KPIs for a specific date
-curl "http://localhost:8000/api/kpis?date=2025-07-10"
+# Get violations for a specific drone (Production)
+curl "https://backend.otito.in/api/violations?drone_id=DRONE_ZONE_1"
+
+# Get KPIs for a specific date (Production)
+curl "https://backend.otito.in/api/kpis?date=2025-07-10"
 ```
 
 ## 📊 Sample Data Format
@@ -228,14 +269,36 @@ PORT=8000
 NEXT_PUBLIC_API_BASE=http://localhost:8000/api
 ```
 
+### Production Environment
+
+**Backend (.env.production):**
+```env
+DATABASE_URL=postgresql://username:password@database-host:5432/drone_analytics
+CORS_ORIGINS=https://aeroniva-frontend.vercel.app
+PORT=8000
+SSL_ENABLED=true
+```
+
+**Frontend (.env.production):**
+```env
+NEXT_PUBLIC_API_BASE=https://backend.otito.in/api
+```
+
 ## 🧪 Testing the Application
 
+### Local Testing
 1. **Start the application** using `docker-compose up --build`
 2. **Navigate to** http://localhost:3000
 3. **Upload the sample file** using the provided `sample_report.json`
 4. **Explore the dashboard** to see KPIs and charts
 5. **View the map** to see violation locations
 6. **Use the table view** to search and filter data
+
+### Production Testing
+1. **Visit the live application** at https://aeroniva-frontend.vercel.app/
+2. **Upload sample data** using any of the provided sample JSON files
+3. **Test all features** including dashboard, map view, and table view
+4. **Verify API endpoints** using https://backend.otito.in/api/health
 
 ## 🎯 Bonus Features Implemented
 
@@ -245,6 +308,9 @@ NEXT_PUBLIC_API_BASE=http://localhost:8000/api
 - ✅ **Responsive design** optimized for all device sizes
 - ✅ **Interactive maps** with custom markers and popups
 - ✅ **Real-time validation** for uploaded JSON files
+- ✅ **Production deployment** on Digital Ocean with HTTPS
+- ✅ **Custom domain** configuration for secure access
+- ✅ **Cloud database** hosting for reliable data storage
 
 ## 🐛 Troubleshooting
 
@@ -280,15 +346,29 @@ NEXT_PUBLIC_API_BASE=http://localhost:8000/api
 
 ## 🤝 Contributing
 
-1. Fork the repository
+### Backend Repository
+1. Fork the [Aerovania repository](https://github.com/codecraft26/Aerovania)
 2. Create a feature branch
 3. Make your changes
 4. Add tests if applicable
 5. Submit a pull request
 
+### Frontend Repository
+1. Fork the [aeroniva-frontend repository](https://github.com/codecraft26/aeroniva-frontend)
+2. Create a feature branch
+3. Make your changes
+4. Test your changes locally
+5. Submit a pull request
+
 ## 📄 License
 
 This project is created for the Aerovania technical assessment.
+
+## 🚀 Live Demo
+
+**Production Application:** https://aeroniva-frontend.vercel.app/
+
+**API Health Check:** https://backend.otito.in/api/health
 
 ---
 

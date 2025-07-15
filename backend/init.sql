@@ -1,5 +1,4 @@
--- backend/init.sql
--- Create database tables
+
 
 CREATE TABLE IF NOT EXISTS reports (
     id SERIAL PRIMARY KEY,

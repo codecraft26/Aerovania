@@ -34,21 +34,21 @@ services:
     networks:
       - drone-network
 
-  # Frontend React App
+  # Frontend Next.js App
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
-      - CHOKIDAR_USEPOLLING=true
+      - NEXT_PUBLIC_API_URL=http://backend:8000
     depends_on:
       - backend
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - /app/.next
     networks:
       - drone-network
 
