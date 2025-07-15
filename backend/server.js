@@ -85,6 +85,44 @@ async function initDatabase() {
 
 // Routes
 
+// Root health check with database connectivity test
+app.get('/', async (req, res) => {
+  try {
+    // Test database connection
+    const result = await pool.query('SELECT NOW() as db_time');
+    
+    res.json({
+      status: 'OK',
+      service: 'Drone Analytics API',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      database: {
+        status: 'connected',
+        timestamp: result.rows[0].db_time
+      },
+      endpoints: {
+        health: '/api/health',
+        upload: '/api/upload',
+        violations: '/api/violations',
+        kpis: '/api/kpis',
+        filters: '/api/filters'
+      }
+    });
+  } catch (error) {
+    console.error('Health check database error:', error);
+    res.status(503).json({
+      status: 'ERROR',
+      service: 'Drone Analytics API',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      database: {
+        status: 'disconnected',
+        error: error.message
+      }
+    });
+  }
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
